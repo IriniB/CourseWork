@@ -1,30 +1,27 @@
 package dancingLinks;
 
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Generator {
 
+    int toHideCount;
+    //public void setToHideCount(int value) { toHideCount = value; }
+
     private int[][] data;
     public int[][] getData() { return data; }
 
+    private int[][] fullData;
+    public int[][] getFullData() { return fullData; }
+
     private final Random rand;
 
-    public Generator() {
+    public Generator(int toHideCount) {
+        this.toHideCount = toHideCount;
         rand = new Random();
         data = new int[9][9];
         generateInputData();
         generate();
-    }
-
-    private void generate() {
-        Sudoku sudoku = new Sudoku();
-        sudoku.inputData = data;
-        sudoku.game();
-        data = sudoku.convertSolutionToArray();
-        hideCells();
-        sudoku.printSolution(data);
     }
 
     private void generateInputData() {
@@ -44,20 +41,33 @@ public class Generator {
         }
     }
 
+    public void generate() {
+        Sudoku sudoku = new Sudoku();
+        sudoku.inputData = data;
+        sudoku.game();
+        data = sudoku.convertSolutionToArray();
+        fullData = new int[9][9];
+        for (int i = 0; i < 9; ++i) {
+            System.arraycopy(data[i], 0, fullData[i], 0, 9);
+        }
+        hideCells();
+        sudoku.printSolution(data);
+    }
+
     // hard = 60
     // middle = 50
     // easy = 40
     private void hideCells() {
-        int toHideCount = 50;
+        int hideTmp = toHideCount;
         ArrayList<IndexPair> existedPairs = new ArrayList<>();
-        while (toHideCount != 0) {
+        while (hideTmp != 0) {
             IndexPair pair = IndexPair.generateRandom();
             while (existedPairs.contains(pair)) {
                 pair = IndexPair.generateRandom();
             }
             existedPairs.add(pair);
             data[pair.getRowNumber()][pair.getColNumber()] = 0;
-            --toHideCount;
+            --hideTmp;
         }
     }
 }

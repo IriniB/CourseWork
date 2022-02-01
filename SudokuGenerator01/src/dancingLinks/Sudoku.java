@@ -8,7 +8,7 @@ public class Sudoku {
     Stack<Node> workingSolution;
     boolean isSolved;
     ExactCoverList exactCoverList;
-    int[][] inputData;
+    public int[][] inputData;
 
     public Sudoku() {
         exactCoverList = new ExactCoverList();
@@ -126,7 +126,7 @@ public class Sudoku {
         }
     }
 
-    protected int[][] convertSolutionToArray() {
+    public int[][] convertSolutionToArray() {
         int[][] result = new int[9][9];
         while (!workingSolution.empty()) {
             result[workingSolution.peek().rowNumber][workingSolution.peek().columnNumber] = workingSolution.peek().value + 1;
